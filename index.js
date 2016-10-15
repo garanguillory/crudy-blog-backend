@@ -5,13 +5,14 @@ const morgan = require('morgan');
 const app = express();
 const router = require('./router');
 const mongoose = require('mongoose');
-// const cors = require('cors');
+const cors = require('cors');
 
-
+mongoose.Promise = global.Promise;
+mongoose.connect('mongodb://localhost:crudy-blog-server/crudy-blog');
 
 // App
 app.use(morgan('combined'));
-// app.use(cors());
+app.use(cors());
 app.use(bodyParser.json({type: '*/*'}));
 router(app);
 
