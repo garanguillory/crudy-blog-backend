@@ -17,10 +17,12 @@ app.use(bodyParser.json({type: '*/*'}));
 
 
 var auth = require('./routes/auth.js');
-var user = require('./routes/user.js');
+var visitor = require('./routes/visitor.js');
+var blogger = require('./routes/blogger.js');
 
 app.use(auth);
-app.use('/blog', user);
+app.use('/blog', visitor);
+app.use('/blogger', blogger);
 
 
 

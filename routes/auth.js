@@ -22,7 +22,8 @@ function login(req, res, next) {
   	email: req.user.email,
   	first_name: req.user.first_name,
   	last_name: req.user.last_name,
-  	photo_url: req.user.photo_url
+  	photo_url: req.user.photo_url,
+  	posts: req.user.posts
   });
 }
 
@@ -48,7 +49,8 @@ function signup(req, res, next){
 				first_name: '',
 				last_name: '',
 				description: '',
-				photo_url: 'http://placehold.it/400x400'
+				photo_url: 'http://placehold.it/400x400',
+				posts: []
 			});
 
 			user.save(function(err){
@@ -57,15 +59,31 @@ function signup(req, res, next){
 					id: user._id,
 					token: userToken(user),
 					email: user.email,
-					photo_url: "http://placehold.it/400x400"
+					photo_url: "http://placehold.it/400x400",
+					posts: []
 				});
 			});
 	});
 }
 
+// router.get('/', function(req, res, next){
+//   User.find({}, function(err, users){
+//   	if (err) { return done(err); }
+//   	res.json({users: users});
+//   });
+// });
 
 router.get('/', function(req, res, next){
-  res.send(['one', 'two', 'three']);
+  User.find({})
+  		.then(function(users) {
+  		  res.status(200).json({
+  		    status: 'success',
+  		    users: users
+  		  });
+  		})
+  		.catch(function (err) {
+  		  return next(err);
+  		});
 });
 
 router.post('/login', requireLogin, login);
@@ -73,3 +91,20 @@ router.post('/signup', signup);
 
 
 module.exports = router;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
