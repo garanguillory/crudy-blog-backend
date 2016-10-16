@@ -1,14 +1,21 @@
+const passportService = require('../services/passport');
+const passport = require('passport');
+const express = require('express');
+const router = express.Router();
+
 const jwt = require('jwt-simple');
 const User = require('../models/user');
 const config = require('../config');
 
+const requireAuth = passport.authenticate('jwt', { session: false });
+const requireLogin = passport.authenticate('local', { session: false });
 
 function userToken(user){
 	const timestamp = new Date().getTime();
 	return jwt.encode({ sub: user.id, iat: timestamp }, config.secret);
 }
 
-exports.login = function(req, res, next) {
+function login(req, res, next) {
   res.send({
   	id: req.user._id,
   	token: userToken(req.user),
@@ -19,15 +26,13 @@ exports.login = function(req, res, next) {
   });
 }
 
-exports.signup = function(req, res, next){
-	
+function signup(req, res, next){
 	const email = req.body.email;
 	const password = req.body.password;
 
 	if(!email || !password){
 		return res.status(422).send({error: "Email and password are required..."});
 	}
-
 
 	User.findOne({email: email}, function(err, existing){
 			if(err){
@@ -56,4 +61,15 @@ exports.signup = function(req, res, next){
 				});
 			});
 	});
-};
+}
+
+
+router.get('/', function(req, res, next){
+  res.send(['one', 'two', 'three']);
+});
+
+router.post('/login', requireLogin, login);
+router.post('/signup', signup);
+
+
+module.exports = router;

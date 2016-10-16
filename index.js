@@ -3,7 +3,7 @@ const http = require('http');
 const bodyParser = require('body-parser');
 const morgan = require('morgan');
 const app = express();
-const router = require('./router');
+const router = require('./router'); // 
 const mongoose = require('mongoose');
 const cors = require('cors');
 
@@ -14,7 +14,17 @@ mongoose.connect('mongodb://localhost:crudy-blog-server/crudy-blog');
 app.use(morgan('combined'));
 app.use(cors());
 app.use(bodyParser.json({type: '*/*'}));
-router(app);
+
+
+var auth = require('./routes/auth.js');
+var user = require('./routes/user.js');
+
+app.use(auth);
+app.use('/blog', user);
+
+
+
+// router(app);
 
 
 

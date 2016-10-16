@@ -8,7 +8,12 @@ const userSchema = new Schema({
   first_name: String,
   last_name: String,
   description: String,
-  photo_url: String
+  photo_url: String,
+  posts: [{
+      author: {type: String},
+      text: {type: String},
+      user_id: {type: String}
+    }],
 });
 
 
