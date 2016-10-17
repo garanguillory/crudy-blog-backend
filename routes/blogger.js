@@ -34,7 +34,7 @@ router.put('/:id/post', requireAuth, function (req, res, next) {
   .then(function(post) {
     console.log(post);
     res.status(200).json({
-      status: 'success',
+      status: 'post added',
       data: post
     });
   })
@@ -61,7 +61,22 @@ router.get('/:id/post', requireAuth, function(req, res) {
 });
 
 // edit blog post
-// *****************************************************************
+router.put('/:id/post/:postId/edit', requireAuth, function (req, res, next) {
+  var id = req.params.id;
+  var postId = req.params.postId;
+  User.findOneAndUpdate({"_id": id, "posts._id": postId}, 
+  	{$set: {"posts.$.text": req.body.text}}, {new:true})
+  .then(function(post) {
+    console.log(post);
+    res.status(200).json({
+      status: 'post edited',
+      data: post
+    });
+  })
+  .catch(function (err) {
+    return next(err);
+  });
+});
 
 // delete blog post
 router.put('/:id/post/:postId/delete', requireAuth, function (req, res, next) {
@@ -71,7 +86,7 @@ router.put('/:id/post/:postId/delete', requireAuth, function (req, res, next) {
   .then(function(post) {
     console.log(post);
     res.status(200).json({
-      status: 'success',
+      status: 'post deleted',
       data: post
     });
   })
@@ -81,12 +96,17 @@ router.put('/:id/post/:postId/delete', requireAuth, function (req, res, next) {
 });
 
 
+// create blogger is done via signup
+// need to redirect from sign up to /blogger/:id
 
 
+// view (self) individual blogger
 
 
+// edit (self) individual blogger
 
 
+// delete (self) individual blogger
 
 
 
