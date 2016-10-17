@@ -28,7 +28,7 @@ router.get('/:id', requireAuth, function(req, res) {
 
 
 // add blog post
-router.put('/:id/post', requireAuth, function (req, res, next) {
+router.put('/:id/post', requireAuth, function(req, res, next) {
   var id = req.params.id;
   User.findByIdAndUpdate(id, {$addToSet: {posts: req.body}}, {new:true})
   .then(function(post) {
@@ -61,7 +61,7 @@ router.get('/:id/post', requireAuth, function(req, res) {
 });
 
 // edit blog post
-router.put('/:id/post/:postId/edit', requireAuth, function (req, res, next) {
+router.put('/:id/post/:postId/edit', requireAuth, function(req, res, next) {
   var id = req.params.id;
   var postId = req.params.postId;
   User.findOneAndUpdate({"_id": id, "posts._id": postId}, 
@@ -79,7 +79,7 @@ router.put('/:id/post/:postId/edit', requireAuth, function (req, res, next) {
 });
 
 // delete blog post
-router.put('/:id/post/:postId/delete', requireAuth, function (req, res, next) {
+router.put('/:id/post/:postId/delete', requireAuth, function(req, res, next) {
   var id = req.params.id;
   var postId = req.params.postId;
   User.findByIdAndUpdate(id, {$pull: {posts: {"_id": postId}}}, {new:true})
@@ -101,13 +101,48 @@ router.put('/:id/post/:postId/delete', requireAuth, function (req, res, next) {
 
 
 // view (self) individual blogger
-
+// make page that shows just the blogger's info
+// no blog posts on the page
+// this page will have routes to the following two routes
 
 // edit (self) individual blogger
+router.put('/:id/edit', requireAuth, function(req, res, next){
+  var id = req.params.id;
+  var email = req.body.email;
+  var first_name = req.body.first_name;
+  var last_name = req.body.last_name;
+  var description = req.body.description;
+  var photo_url = req.body.photo_url;
+  
+  User.findByIdAndUpdate(id, 
+      {$set: {
+        "email": email,
+        "first_name": first_name,
+        "last_name": last_name,
+        "description": description,
+        "photo_url": photo_url}}, {new:true} )
+      .then(function(user) {
+        res.status(200).send({user: user});
+      })
+      .catch(function (err) {
+        return next(err);
+      });
+});
 
 
 // delete (self) individual blogger
-
+router.delete('/:id/delete', requireAuth, function(req, res, next){
+  var id = req.params.id;
+  User.findByIdAndRemove(id)
+      .then(function() {
+        res.status(200).json({
+          status: 'user deleted'
+        });
+      })
+      .catch(function (err) {
+        return next(err);
+      });
+});
 
 
 

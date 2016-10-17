@@ -49,7 +49,6 @@ function signup(req, res, next){
 				first_name: '',
 				last_name: '',
 				description: '',
-				photo_url: 'http://placehold.it/400x400',
 				posts: []
 			});
 
@@ -59,7 +58,6 @@ function signup(req, res, next){
 					id: user._id,
 					token: userToken(user),
 					email: user.email,
-					photo_url: "http://placehold.it/400x400",
 					posts: []
 				});
 			});
